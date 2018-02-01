@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"flag"
-	"fmt"
 	"net"
 	"net/rpc"
 	"strconv"
@@ -72,10 +71,14 @@ func LoadAll(usex models.UserSession) string {
 
 	//default current month
 	var camps []models.Campaign
+	byship := false
+	if usex.Params == "true" {
+		byship = true
+	}
 	t := time.Now()
 	d, _ := time.ParseDuration(strconv.Itoa(23-t.Hour()) + "h" + strconv.Itoa(60-t.Minute()) + "m")
 
-	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d))
+	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d), byship)
 	camp.Name = t.Month().String()
 	camps = append(camps, camp)
 
@@ -88,17 +91,21 @@ func Load3Month(usex models.UserSession) string {
 	//default current month
 	var camps []models.Campaign
 	t := time.Now()
+	byship := false
+	if usex.Params == "true" {
+		byship = true
+	}
 	d, _ := time.ParseDuration(strconv.Itoa(23-t.Hour()) + "h" + strconv.Itoa(60-t.Minute()) + "m")
-
-	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d))
+	log.Debugf("d %s, checked: %v", d, usex.Params)
+	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d), byship)
 	camp.Name = t.Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -1, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -2, 0).Month().String()
 	camps = append(camps, camp)
 
@@ -113,28 +120,31 @@ func Load6Month(usex models.UserSession) string {
 	var camps []models.Campaign
 	t := time.Now()
 	d, _ := time.ParseDuration(strconv.Itoa(23-t.Hour()) + "h" + strconv.Itoa(60-t.Minute()) + "m")
-
-	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d))
+	byship := false
+	if usex.Params == "true" {
+		byship = true
+	}
+	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d), byship)
 	camp.Name = t.Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -1, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -2, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -3, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -4, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -5, 0).Month().String()
 	camps = append(camps, camp)
 
@@ -149,40 +159,43 @@ func Load9Month(usex models.UserSession) string {
 	var camps []models.Campaign
 	t := time.Now()
 	d, _ := time.ParseDuration(strconv.Itoa(23-t.Hour()) + "h" + strconv.Itoa(60-t.Minute()) + "m")
-
-	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d))
+	byship := false
+	if usex.Params == "true" {
+		byship = true
+	}
+	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d), byship)
 	camp.Name = t.Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -1, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -2, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -3, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -4, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -5, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -6, -t.Day()).Add(d), t.AddDate(0, -5, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -6, -t.Day()).Add(d), t.AddDate(0, -5, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -6, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -7, -t.Day()).Add(d), t.AddDate(0, -6, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -7, -t.Day()).Add(d), t.AddDate(0, -6, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -7, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -8, -t.Day()).Add(d), t.AddDate(0, -7, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -8, -t.Day()).Add(d), t.AddDate(0, -7, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -8, 0).Month().String()
 	camps = append(camps, camp)
 
@@ -197,52 +210,55 @@ func Load12Month(usex models.UserSession) string {
 	var camps []models.Campaign
 	t := time.Now()
 	d, _ := time.ParseDuration(strconv.Itoa(23-t.Hour()) + "h" + strconv.Itoa(60-t.Minute()) + "m")
-
-	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d))
+	byship := false
+	if usex.Params == "true" {
+		byship = true
+	}
+	camp := rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, 0, -t.Day()).Add(d), t.AddDate(0, 1, -t.Day()).Add(d), byship)
 	camp.Name = t.Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -1, -t.Day()).Add(d), t.AddDate(0, 0, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -1, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -2, -t.Day()).Add(d), t.AddDate(0, -1, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -2, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -3, -t.Day()).Add(d), t.AddDate(0, -2, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -3, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -4, -t.Day()).Add(d), t.AddDate(0, -3, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -4, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -5, -t.Day()).Add(d), t.AddDate(0, -4, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -5, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -6, -t.Day()).Add(d), t.AddDate(0, -5, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -6, -t.Day()).Add(d), t.AddDate(0, -5, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -6, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -7, -t.Day()).Add(d), t.AddDate(0, -6, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -7, -t.Day()).Add(d), t.AddDate(0, -6, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -7, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -8, -t.Day()).Add(d), t.AddDate(0, -7, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -8, -t.Day()).Add(d), t.AddDate(0, -7, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -8, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -9, -t.Day()).Add(d), t.AddDate(0, -8, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -9, -t.Day()).Add(d), t.AddDate(0, -8, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -9, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -10, -t.Day()).Add(d), t.AddDate(0, -9, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -10, -t.Day()).Add(d), t.AddDate(0, -9, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -10, 0).Month().String()
 	camps = append(camps, camp)
 
-	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -11, -t.Day()).Add(d), t.AddDate(0, -10, -t.Day()).Add(d))
+	camp = rpch.GetOrdersReportByRange(usex.Shop.ID.Hex(), t.AddDate(0, -11, -t.Day()).Add(d), t.AddDate(0, -10, -t.Day()).Add(d), byship)
 	camp.Name = t.AddDate(0, -11, 0).Month().String()
 	camps = append(camps, camp)
 
@@ -258,15 +274,15 @@ func main() {
 	flag.BoolVar(&debug, "debug", false, "Indicates if debug messages should be printed in log files")
 	flag.Parse()
 
-	logLevel := log.DebugLevel
-	if !debug {
-		logLevel = log.InfoLevel
+	// logLevel := log.DebugLevel
+	// if !debug {
+	// 	logLevel = log.InfoLevel
 
-	}
+	// }
 
-	log.SetOutputFile(fmt.Sprintf("adminReport-"+strconv.Itoa(port)), logLevel)
-	defer log.CloseOutputFile()
-	log.RedirectStdOut()
+	// log.SetOutputFile(fmt.Sprintf("adminReport-"+strconv.Itoa(port)), logLevel)
+	// defer log.CloseOutputFile()
+	// log.RedirectStdOut()
 
 	//init db
 	arith := new(Arith)
