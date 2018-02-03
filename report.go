@@ -112,6 +112,7 @@ func Load3Month(usex models.UserSession) string {
 	info, _ := json.Marshal(camps)
 	strrt := string(info)
 	return c3mcommon.ReturnJsonMessage("1", "", "success", strrt)
+
 }
 
 func Load6Month(usex models.UserSession) string {
